@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  template:
+    spec:
+      containers:
+      - name: copy-container
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args:
+          - "echo '<h1> Hello World </h1>' > /tmp/index.html && cp /tmp/index.html /mnt/shared/index.html"
+        volumeMounts:
+        - mountPath: /mnt/shared
+          name: vol
+      restartPolicy: Never
+      volumes:
+        - name: vol
+          persistentVolumeClaim:
+            claimName: dynamic-volume-claim
+  backoffLimit: 4
